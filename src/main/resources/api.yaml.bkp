@@ -1,0 +1,432 @@
+swagger: '2.0'
+info:
+  title: Book Store API
+  description: This is an API for an online bookstore
+  version: v1
+
+paths:
+  /books:
+    get:
+      summary: Retrieve all the books in the system.
+      operationId: getAllBooks
+      description: Retrieve all the books in the system with limited review information.
+      responses:
+        200:
+          description: Search results matching the given criteria.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SimpleBook'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        500:
+          $ref: '#/responses/ServerError'
+    post:
+      summary: Add a new book.
+      operationId: addBook
+      description: Adds a new book to the system. Book can have 0 or more reviews.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: Type
+          description: Book object to be added.
+          schema:
+            $ref: '#/definitions/Book'
+      responses:
+        201:
+          description: Item Created
+          schema:
+            $ref: '#/definitions/BookPostResponse'
+          headers:
+            Location:
+              type: string
+              description: Location of the newly created identity provider
+        400:
+          $ref: '#/responses/InvalidInput'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        409:
+          $ref: '#/responses/Conflict'
+        500:
+          $ref: '#/responses/ServerError'
+  /books/{book-id}:
+    get:
+      summary: Retrieve the book resource indentified by the book-id.
+      operationId: getBook
+      description: Retrieve the book resource indentified by the book-id.
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+      responses:
+        200:
+          description: Search results matching the given criteria.
+          schema:
+            $ref: '#/definitions/Book'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        500:
+          $ref: '#/responses/ServerError'
+    put:
+      summary: Replace all reviews of the book identified by the book-id.
+      operationId: updateBook
+      description: Replace all reviews of the book identified by the book-id.
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+        - in: body
+          name: reviews
+          description: Reviews of the book.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Book'
+      responses:
+        200:
+          $ref: '#/responses/Updated'
+        400:
+          $ref: '#/responses/InvalidInput'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
+    delete:
+      summary: Removes a book.
+      operationId: deleteBook
+      description: Removes a book from the system with it's reviews.
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+      responses:
+        200:
+          $ref: '#/responses/Deleted'
+        400:
+          $ref: '#/responses/InvalidInput'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
+  /books/{book-id}/reviews:
+    get:
+      summary: Retrieve all the reviews of the book.
+      operationId: getAllReviews
+      description: Retrieve all the reviews of the book identified by the book-id.
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+      responses:
+        200:
+          description: Search results matching the given criteria.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Review'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        500:
+          $ref: '#/responses/ServerError'
+    post:
+      summary: Adds a new review to the book.
+      operationId: addReview
+      description: Adds a new review to the book identified by the book-id.
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+        - in: body
+          name: Type
+          description: Book object to be added.
+          schema:
+            $ref: '#/definitions/Review'
+      responses:
+        201:
+          description: Item Created
+          schema:
+            $ref: '#/definitions/SimpleReview'
+          headers:
+            Location:
+              type: string
+              description: Location of the newly created identity provider
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        500:
+          $ref: '#/responses/ServerError'
+
+  /books/{book-id}/reviews/{review-id}:
+    get:
+      summary: Retrieve the Review of the book.
+      operationId: getReview
+      description: Retrieve the Review identified by the review-id of the book indentified by the book-id.
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+        - $ref: '#/parameters/reviewIdPathParam'
+      responses:
+        200:
+          description: Search results matching the given criteria.
+          schema:
+            $ref: '#/definitions/Review'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        500:
+          $ref: '#/responses/ServerError'
+    put:
+      summary: Replace the review content.
+      operationId: updateReview
+      description: Replace the review content identified by the book-id anf the review-id/
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+        - $ref: '#/parameters/reviewIdPathParam'
+        - in: body
+          name: reviews
+          description: Reviews of the book.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Review'
+      responses:
+        200:
+          $ref: '#/responses/Updated'
+        400:
+          $ref: '#/responses/InvalidInput'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
+    delete:
+      summary: Removes a review.
+      operationId: deleteReview
+      description: Removes a review from the system identified by the book-d and the review-id.
+      parameters:
+        - $ref: '#/parameters/bookIdPathParam'
+        - $ref: '#/parameters/reviewIdPathParam'
+      responses:
+        200:
+          $ref: '#/responses/Deleted'
+        400:
+          $ref: '#/responses/InvalidInput'
+        401:
+          $ref: '#/responses/Unauthorized'
+        403:
+          $ref: '#/responses/Forbidden'
+        404:
+          $ref: '#/responses/NotFound'
+        500:
+          $ref: '#/responses/ServerError'
+
+definitions:
+  Book:
+    type: object
+    required:
+      - id
+      - name
+      - author
+      - price
+      - reviews
+    properties:
+      id:
+        type: string
+        example: B10001
+        description: Unique id of the book.
+      name:
+        type: string
+        example: The Adventures of Tom Sawyer
+        description: Name of the book.
+      author:
+        type: string
+        example: Mark Twain
+        description: Author of the book.
+      price:
+        type: string
+        example: $4.90
+        description: Price of the book.
+      reviews:
+        type: array
+        description: Reviews of the book.
+        items:
+          $ref: '#/definitions/Review'
+
+  Review:
+    type: object
+    required:
+      - id
+      - score
+      - comment
+      - reviwer
+    properties:
+      id:
+        type: string
+        example: R1001234
+        description: Unique id of the review.
+      score:
+        type: string
+        example: 4.3
+        description: Review score.
+      comment:
+        type: string
+        example: Good book to read.
+        description: Review comment.
+      reviwer:
+        type: string
+        example: vihanga
+        description: Reviewer.
+
+  BookPostResponse:
+    type: object
+    required:
+      - id
+      - name
+      - author
+      - location
+    properties:
+      id:
+        type: string
+        example: B10001
+        description: Unique id of the book.
+      name:
+        type: string
+        example: The Adventures of Tom Sawyer
+        description: Name of the book.
+      location:
+        type: string
+        example: /books/B10001
+        description: Unique id of the review.
+      reviews:
+        type: array
+        description: Reviews of the book.
+        items:
+          $ref: '#/definitions/SimpleReview'
+
+  SimpleBook:
+    type: object
+    required:
+      - id
+      - name
+      - author
+      - price
+      - reviews
+    properties:
+      id:
+        type: string
+        example: B10001
+        description: Unique id of the book.
+      name:
+        type: string
+        example: The Adventures of Tom Sawyer
+        description: Name of the book.
+      author:
+        type: string
+        example: Mark Twain
+        description: Author of the book.
+      price:
+        type: string
+        example: $4.90
+        description: Price of the book.
+      reviews:
+        type: array
+        description: Reviews of the book.
+        items:
+          $ref: '#/definitions/SimpleReview'
+
+  SimpleReview:
+    type: object
+    required:
+      - location
+    properties:
+      location:
+        type: string
+        example: /books/B10001/reviews/R1001234
+        description: Unique id of the review.
+
+  Error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: string
+        example: "ET0001"
+      message:
+        type: string
+        example: "Some Error Message"
+      description:
+        type: string
+        example: "Some Error Description"
+      traceId:
+        type: string
+        example: "TR0001"
+
+responses:
+  NotFound:
+    description: The specified resource is not found
+    schema:
+      $ref: '#/definitions/Error'
+  Unauthorized:
+    description: Unauthorized
+    schema:
+      $ref: '#/definitions/Error'
+  Forbidden:
+    description: Forbidden
+    schema:
+      $ref: '#/definitions/Error'
+  ServerError:
+    description: Internal Server Error
+    schema:
+      $ref: '#/definitions/Error'
+  InvalidInput:
+    description: Invalid input request
+    schema:
+      $ref: '#/definitions/Error'
+  Conflict:
+    description: Item Already Exists
+    schema:
+      $ref: '#/definitions/Error'
+  Deleted:
+    description: Item Deleted
+  Updated:
+    description: Item Updated
+
+
+parameters:
+  bookIdPathParam:
+    in: path
+    name: book-id
+    required: true
+    type: string
+    description: Unique book ID
+  reviewIdPathParam:
+    in: path
+    name: review-id
+    required: true
+    type: string
+    description: Unique review ID
+
+# Added by API Auto Mocking Plugin
+host: mybookstore.com
+basePath: /api/v1
+schemes:
+  - https
