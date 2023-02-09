@@ -4,15 +4,12 @@ package com.radukkad.sbstarter;
 import com.radukkad.sbstarter.blogs.controller.UserController;
 import com.radukkad.sbstarter.blogs.dto.UserModel;
 import com.radukkad.sbstarter.blogs.repository.UserRepository;
-import com.radukkad.sbstarter.blogs.service.BlogService;
-import com.radukkad.sbstarter.blogs.service.UserService;
+import com.radukkad.sbstarter.blogs.service.BlogServiceImpl;
+import com.radukkad.sbstarter.blogs.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
@@ -31,10 +28,10 @@ public class WebMockTests {
     @MockBean
     UserRepository userRepository;
     @MockBean
-    UserService userService;
+    UserServiceImpl userService;
 
     @MockBean
-    BlogService blogService;
+    BlogServiceImpl blogService;
 
     @Test
     public void userServiceShouldReturn200OK() throws Exception {
