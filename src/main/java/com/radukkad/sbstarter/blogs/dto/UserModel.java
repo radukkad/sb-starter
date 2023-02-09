@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public class UserModel implements Serializable {
+
+    int id;
     String logon;
     String name;
 
@@ -38,5 +40,13 @@ public class UserModel implements Serializable {
 
     public void setBlogs(List<BlogModel> blogs) {
         this.blogs = blogs;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

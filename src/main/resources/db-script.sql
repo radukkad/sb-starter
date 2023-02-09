@@ -1,3 +1,6 @@
+CREATE DATABASE restapi;
+USE restapi;
+
 CREATE TABLE user(
     id int NOT NULL AUTO_INCREMENT,
     logon varchar(100) NOT NULL,
@@ -10,6 +13,7 @@ CREATE TABLE blog(
     title varchar(500) NOT NULL,
     content varchar(5000) NOT NULL,
     writer int NOT NULL,
+    submittedon DATE,
     PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES user(id)
 )

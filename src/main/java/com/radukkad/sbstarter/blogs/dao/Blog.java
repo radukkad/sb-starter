@@ -1,6 +1,7 @@
 package com.radukkad.sbstarter.blogs.dao;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 public class Blog {
@@ -14,6 +15,8 @@ public class Blog {
 
     private String title;
     private String content;
+
+    private Date submittedon;
 
     public Blog() {  }
 
@@ -67,5 +70,13 @@ public class Blog {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public Date getSubmittedon() {
+        return submittedon;
+    }
+
+    public void setSubmittedon(Date submittedon) {
+        this.submittedon = submittedon;
     }
 }
